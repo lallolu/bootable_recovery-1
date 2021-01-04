@@ -77,7 +77,7 @@ static bool IsDeviceUnlocked() {
   return "orange" == android::base::GetProperty("ro.boot.verifiedbootstate", "");
 }
 
-static std::string get_build_type() {
+std::string get_build_type() {
   return android::base::GetProperty("ro.build.type", "");
 }
 
@@ -497,6 +497,10 @@ int main(int argc, char** argv) {
   if (get_build_type() == "user") {
     device->RemoveMenuItemForAction(Device::WIPE_SYSTEM);
     device->RemoveMenuItemForAction(Device::MOUNT_SYSTEM);
+  }
+
+  if (!android::base::GetBoolProperty("ro.build.ab_update", false)) {
+    device->RemoveMenuItemForAction(Device::SWAP_SLOT);
   }
 
   ui->SetBackground(RecoveryUI::NONE);
